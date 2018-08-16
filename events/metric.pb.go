@@ -88,14 +88,15 @@ func (m *CounterEvent) GetTotal() uint64 {
 
 // / A ContainerMetric records resource usage of an app in a container.
 type ContainerMetric struct {
-	ApplicationId    *string  `protobuf:"bytes,1,req,name=applicationId" json:"applicationId,omitempty"`
-	InstanceIndex    *int32   `protobuf:"varint,2,req,name=instanceIndex" json:"instanceIndex,omitempty"`
-	CpuPercentage    *float64 `protobuf:"fixed64,3,req,name=cpuPercentage" json:"cpuPercentage,omitempty"`
-	MemoryBytes      *uint64  `protobuf:"varint,4,req,name=memoryBytes" json:"memoryBytes,omitempty"`
-	DiskBytes        *uint64  `protobuf:"varint,5,req,name=diskBytes" json:"diskBytes,omitempty"`
-	MemoryBytesQuota *uint64  `protobuf:"varint,6,opt,name=memoryBytesQuota" json:"memoryBytesQuota,omitempty"`
-	DiskBytesQuota   *uint64  `protobuf:"varint,7,opt,name=diskBytesQuota" json:"diskBytesQuota,omitempty"`
-	XXX_unrecognized []byte   `json:"-"`
+	ApplicationId         *string  `protobuf:"bytes,1,req,name=applicationId" json:"applicationId,omitempty"`
+	InstanceIndex         *int32   `protobuf:"varint,2,req,name=instanceIndex" json:"instanceIndex,omitempty"`
+	CpuPercentage         *float64 `protobuf:"fixed64,3,req,name=cpuPercentage" json:"cpuPercentage,omitempty"`
+	MemoryBytes           *uint64  `protobuf:"varint,4,req,name=memoryBytes" json:"memoryBytes,omitempty"`
+	DiskBytes             *uint64  `protobuf:"varint,5,req,name=diskBytes" json:"diskBytes,omitempty"`
+	MemoryBytesQuota      *uint64  `protobuf:"varint,6,opt,name=memoryBytesQuota" json:"memoryBytesQuota,omitempty"`
+	DiskBytesQuota        *uint64  `protobuf:"varint,7,opt,name=diskBytesQuota" json:"diskBytesQuota,omitempty"`
+	CpuPercentageWeighted *float64 `protobuf:"fixed64,8,opt,name=cpuPercentageWeighted" json:"cpuPercentageWeighted,omitempty"`
+	XXX_unrecognized      []byte   `json:"-"`
 }
 
 func (m *ContainerMetric) Reset()                    { *m = ContainerMetric{} }
@@ -152,22 +153,29 @@ func (m *ContainerMetric) GetDiskBytesQuota() uint64 {
 	return 0
 }
 
+func (m *ContainerMetric) GetCpuPercentageWeighted() float64 {
+	if m != nil && m.CpuPercentageWeighted != nil {
+		return *m.CpuPercentageWeighted
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*ValueMetric)(nil), "events.ValueMetric")
 	proto.RegisterType((*CounterEvent)(nil), "events.CounterEvent")
 	proto.RegisterType((*ContainerMetric)(nil), "events.ContainerMetric")
 }
-func (m *ValueMetric) Marshal() (data []byte, err error) {
+func (m *ValueMetric) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
-	data = make([]byte, size)
-	n, err := m.MarshalTo(data)
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
 	if err != nil {
 		return nil, err
 	}
-	return data[:n], nil
+	return dAtA[:n], nil
 }
 
-func (m *ValueMetric) MarshalTo(data []byte) (int, error) {
+func (m *ValueMetric) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -175,43 +183,43 @@ func (m *ValueMetric) MarshalTo(data []byte) (int, error) {
 	if m.Name == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("name")
 	} else {
-		data[i] = 0xa
+		dAtA[i] = 0xa
 		i++
-		i = encodeVarintMetric(data, i, uint64(len(*m.Name)))
-		i += copy(data[i:], *m.Name)
+		i = encodeVarintMetric(dAtA, i, uint64(len(*m.Name)))
+		i += copy(dAtA[i:], *m.Name)
 	}
 	if m.Value == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("value")
 	} else {
-		data[i] = 0x11
+		dAtA[i] = 0x11
 		i++
-		i = encodeFixed64Metric(data, i, uint64(math.Float64bits(float64(*m.Value))))
+		i = encodeFixed64Metric(dAtA, i, uint64(math.Float64bits(float64(*m.Value))))
 	}
 	if m.Unit == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("unit")
 	} else {
-		data[i] = 0x1a
+		dAtA[i] = 0x1a
 		i++
-		i = encodeVarintMetric(data, i, uint64(len(*m.Unit)))
-		i += copy(data[i:], *m.Unit)
+		i = encodeVarintMetric(dAtA, i, uint64(len(*m.Unit)))
+		i += copy(dAtA[i:], *m.Unit)
 	}
 	if m.XXX_unrecognized != nil {
-		i += copy(data[i:], m.XXX_unrecognized)
+		i += copy(dAtA[i:], m.XXX_unrecognized)
 	}
 	return i, nil
 }
 
-func (m *CounterEvent) Marshal() (data []byte, err error) {
+func (m *CounterEvent) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
-	data = make([]byte, size)
-	n, err := m.MarshalTo(data)
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
 	if err != nil {
 		return nil, err
 	}
-	return data[:n], nil
+	return dAtA[:n], nil
 }
 
-func (m *CounterEvent) MarshalTo(data []byte) (int, error) {
+func (m *CounterEvent) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -219,40 +227,40 @@ func (m *CounterEvent) MarshalTo(data []byte) (int, error) {
 	if m.Name == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("name")
 	} else {
-		data[i] = 0xa
+		dAtA[i] = 0xa
 		i++
-		i = encodeVarintMetric(data, i, uint64(len(*m.Name)))
-		i += copy(data[i:], *m.Name)
+		i = encodeVarintMetric(dAtA, i, uint64(len(*m.Name)))
+		i += copy(dAtA[i:], *m.Name)
 	}
 	if m.Delta == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("delta")
 	} else {
-		data[i] = 0x10
+		dAtA[i] = 0x10
 		i++
-		i = encodeVarintMetric(data, i, uint64(*m.Delta))
+		i = encodeVarintMetric(dAtA, i, uint64(*m.Delta))
 	}
 	if m.Total != nil {
-		data[i] = 0x18
+		dAtA[i] = 0x18
 		i++
-		i = encodeVarintMetric(data, i, uint64(*m.Total))
+		i = encodeVarintMetric(dAtA, i, uint64(*m.Total))
 	}
 	if m.XXX_unrecognized != nil {
-		i += copy(data[i:], m.XXX_unrecognized)
+		i += copy(dAtA[i:], m.XXX_unrecognized)
 	}
 	return i, nil
 }
 
-func (m *ContainerMetric) Marshal() (data []byte, err error) {
+func (m *ContainerMetric) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
-	data = make([]byte, size)
-	n, err := m.MarshalTo(data)
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
 	if err != nil {
 		return nil, err
 	}
-	return data[:n], nil
+	return dAtA[:n], nil
 }
 
-func (m *ContainerMetric) MarshalTo(data []byte) (int, error) {
+func (m *ContainerMetric) MarshalTo(dAtA []byte) (int, error) {
 	var i int
 	_ = i
 	var l int
@@ -260,80 +268,85 @@ func (m *ContainerMetric) MarshalTo(data []byte) (int, error) {
 	if m.ApplicationId == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("applicationId")
 	} else {
-		data[i] = 0xa
+		dAtA[i] = 0xa
 		i++
-		i = encodeVarintMetric(data, i, uint64(len(*m.ApplicationId)))
-		i += copy(data[i:], *m.ApplicationId)
+		i = encodeVarintMetric(dAtA, i, uint64(len(*m.ApplicationId)))
+		i += copy(dAtA[i:], *m.ApplicationId)
 	}
 	if m.InstanceIndex == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("instanceIndex")
 	} else {
-		data[i] = 0x10
+		dAtA[i] = 0x10
 		i++
-		i = encodeVarintMetric(data, i, uint64(*m.InstanceIndex))
+		i = encodeVarintMetric(dAtA, i, uint64(*m.InstanceIndex))
 	}
 	if m.CpuPercentage == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("cpuPercentage")
 	} else {
-		data[i] = 0x19
+		dAtA[i] = 0x19
 		i++
-		i = encodeFixed64Metric(data, i, uint64(math.Float64bits(float64(*m.CpuPercentage))))
+		i = encodeFixed64Metric(dAtA, i, uint64(math.Float64bits(float64(*m.CpuPercentage))))
 	}
 	if m.MemoryBytes == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("memoryBytes")
 	} else {
-		data[i] = 0x20
+		dAtA[i] = 0x20
 		i++
-		i = encodeVarintMetric(data, i, uint64(*m.MemoryBytes))
+		i = encodeVarintMetric(dAtA, i, uint64(*m.MemoryBytes))
 	}
 	if m.DiskBytes == nil {
 		return 0, github_com_gogo_protobuf_proto.NewRequiredNotSetError("diskBytes")
 	} else {
-		data[i] = 0x28
+		dAtA[i] = 0x28
 		i++
-		i = encodeVarintMetric(data, i, uint64(*m.DiskBytes))
+		i = encodeVarintMetric(dAtA, i, uint64(*m.DiskBytes))
 	}
 	if m.MemoryBytesQuota != nil {
-		data[i] = 0x30
+		dAtA[i] = 0x30
 		i++
-		i = encodeVarintMetric(data, i, uint64(*m.MemoryBytesQuota))
+		i = encodeVarintMetric(dAtA, i, uint64(*m.MemoryBytesQuota))
 	}
 	if m.DiskBytesQuota != nil {
-		data[i] = 0x38
+		dAtA[i] = 0x38
 		i++
-		i = encodeVarintMetric(data, i, uint64(*m.DiskBytesQuota))
+		i = encodeVarintMetric(dAtA, i, uint64(*m.DiskBytesQuota))
+	}
+	if m.CpuPercentageWeighted != nil {
+		dAtA[i] = 0x41
+		i++
+		i = encodeFixed64Metric(dAtA, i, uint64(math.Float64bits(float64(*m.CpuPercentageWeighted))))
 	}
 	if m.XXX_unrecognized != nil {
-		i += copy(data[i:], m.XXX_unrecognized)
+		i += copy(dAtA[i:], m.XXX_unrecognized)
 	}
 	return i, nil
 }
 
-func encodeFixed64Metric(data []byte, offset int, v uint64) int {
-	data[offset] = uint8(v)
-	data[offset+1] = uint8(v >> 8)
-	data[offset+2] = uint8(v >> 16)
-	data[offset+3] = uint8(v >> 24)
-	data[offset+4] = uint8(v >> 32)
-	data[offset+5] = uint8(v >> 40)
-	data[offset+6] = uint8(v >> 48)
-	data[offset+7] = uint8(v >> 56)
+func encodeFixed64Metric(dAtA []byte, offset int, v uint64) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
+	dAtA[offset+4] = uint8(v >> 32)
+	dAtA[offset+5] = uint8(v >> 40)
+	dAtA[offset+6] = uint8(v >> 48)
+	dAtA[offset+7] = uint8(v >> 56)
 	return offset + 8
 }
-func encodeFixed32Metric(data []byte, offset int, v uint32) int {
-	data[offset] = uint8(v)
-	data[offset+1] = uint8(v >> 8)
-	data[offset+2] = uint8(v >> 16)
-	data[offset+3] = uint8(v >> 24)
+func encodeFixed32Metric(dAtA []byte, offset int, v uint32) int {
+	dAtA[offset] = uint8(v)
+	dAtA[offset+1] = uint8(v >> 8)
+	dAtA[offset+2] = uint8(v >> 16)
+	dAtA[offset+3] = uint8(v >> 24)
 	return offset + 4
 }
-func encodeVarintMetric(data []byte, offset int, v uint64) int {
+func encodeVarintMetric(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
-		data[offset] = uint8(v&0x7f | 0x80)
+		dAtA[offset] = uint8(v&0x7f | 0x80)
 		v >>= 7
 		offset++
 	}
-	data[offset] = uint8(v)
+	dAtA[offset] = uint8(v)
 	return offset + 1
 }
 func (m *ValueMetric) Size() (n int) {
@@ -400,6 +413,9 @@ func (m *ContainerMetric) Size() (n int) {
 	if m.DiskBytesQuota != nil {
 		n += 1 + sovMetric(uint64(*m.DiskBytesQuota))
 	}
+	if m.CpuPercentageWeighted != nil {
+		n += 9
+	}
 	if m.XXX_unrecognized != nil {
 		n += len(m.XXX_unrecognized)
 	}
@@ -419,9 +435,9 @@ func sovMetric(x uint64) (n int) {
 func sozMetric(x uint64) (n int) {
 	return sovMetric(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *ValueMetric) Unmarshal(data []byte) error {
+func (m *ValueMetric) Unmarshal(dAtA []byte) error {
 	var hasFields [1]uint64
-	l := len(data)
+	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
 		preIndex := iNdEx
@@ -433,7 +449,7 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 			if iNdEx >= l {
 				return io.ErrUnexpectedEOF
 			}
-			b := data[iNdEx]
+			b := dAtA[iNdEx]
 			iNdEx++
 			wire |= (uint64(b) & 0x7F) << shift
 			if b < 0x80 {
@@ -461,7 +477,7 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				stringLen |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -476,7 +492,7 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(data[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
 			m.Name = &s
 			iNdEx = postIndex
 			hasFields[0] |= uint64(0x00000001)
@@ -489,14 +505,14 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			iNdEx += 8
-			v = uint64(data[iNdEx-8])
-			v |= uint64(data[iNdEx-7]) << 8
-			v |= uint64(data[iNdEx-6]) << 16
-			v |= uint64(data[iNdEx-5]) << 24
-			v |= uint64(data[iNdEx-4]) << 32
-			v |= uint64(data[iNdEx-3]) << 40
-			v |= uint64(data[iNdEx-2]) << 48
-			v |= uint64(data[iNdEx-1]) << 56
+			v = uint64(dAtA[iNdEx-8])
+			v |= uint64(dAtA[iNdEx-7]) << 8
+			v |= uint64(dAtA[iNdEx-6]) << 16
+			v |= uint64(dAtA[iNdEx-5]) << 24
+			v |= uint64(dAtA[iNdEx-4]) << 32
+			v |= uint64(dAtA[iNdEx-3]) << 40
+			v |= uint64(dAtA[iNdEx-2]) << 48
+			v |= uint64(dAtA[iNdEx-1]) << 56
 			v2 := float64(math.Float64frombits(v))
 			m.Value = &v2
 			hasFields[0] |= uint64(0x00000002)
@@ -512,7 +528,7 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				stringLen |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -527,13 +543,13 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(data[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
 			m.Unit = &s
 			iNdEx = postIndex
 			hasFields[0] |= uint64(0x00000004)
 		default:
 			iNdEx = preIndex
-			skippy, err := skipMetric(data[iNdEx:])
+			skippy, err := skipMetric(dAtA[iNdEx:])
 			if err != nil {
 				return err
 			}
@@ -543,7 +559,7 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
 	}
@@ -562,9 +578,9 @@ func (m *ValueMetric) Unmarshal(data []byte) error {
 	}
 	return nil
 }
-func (m *CounterEvent) Unmarshal(data []byte) error {
+func (m *CounterEvent) Unmarshal(dAtA []byte) error {
 	var hasFields [1]uint64
-	l := len(data)
+	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
 		preIndex := iNdEx
@@ -576,7 +592,7 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 			if iNdEx >= l {
 				return io.ErrUnexpectedEOF
 			}
-			b := data[iNdEx]
+			b := dAtA[iNdEx]
 			iNdEx++
 			wire |= (uint64(b) & 0x7F) << shift
 			if b < 0x80 {
@@ -604,7 +620,7 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				stringLen |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -619,7 +635,7 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(data[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
 			m.Name = &s
 			iNdEx = postIndex
 			hasFields[0] |= uint64(0x00000001)
@@ -635,7 +651,7 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -656,7 +672,7 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -666,7 +682,7 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 			m.Total = &v
 		default:
 			iNdEx = preIndex
-			skippy, err := skipMetric(data[iNdEx:])
+			skippy, err := skipMetric(dAtA[iNdEx:])
 			if err != nil {
 				return err
 			}
@@ -676,7 +692,7 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
 	}
@@ -692,9 +708,9 @@ func (m *CounterEvent) Unmarshal(data []byte) error {
 	}
 	return nil
 }
-func (m *ContainerMetric) Unmarshal(data []byte) error {
+func (m *ContainerMetric) Unmarshal(dAtA []byte) error {
 	var hasFields [1]uint64
-	l := len(data)
+	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
 		preIndex := iNdEx
@@ -706,7 +722,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 			if iNdEx >= l {
 				return io.ErrUnexpectedEOF
 			}
-			b := data[iNdEx]
+			b := dAtA[iNdEx]
 			iNdEx++
 			wire |= (uint64(b) & 0x7F) << shift
 			if b < 0x80 {
@@ -734,7 +750,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				stringLen |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -749,7 +765,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			s := string(data[iNdEx:postIndex])
+			s := string(dAtA[iNdEx:postIndex])
 			m.ApplicationId = &s
 			iNdEx = postIndex
 			hasFields[0] |= uint64(0x00000001)
@@ -765,7 +781,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (int32(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -783,14 +799,14 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			iNdEx += 8
-			v = uint64(data[iNdEx-8])
-			v |= uint64(data[iNdEx-7]) << 8
-			v |= uint64(data[iNdEx-6]) << 16
-			v |= uint64(data[iNdEx-5]) << 24
-			v |= uint64(data[iNdEx-4]) << 32
-			v |= uint64(data[iNdEx-3]) << 40
-			v |= uint64(data[iNdEx-2]) << 48
-			v |= uint64(data[iNdEx-1]) << 56
+			v = uint64(dAtA[iNdEx-8])
+			v |= uint64(dAtA[iNdEx-7]) << 8
+			v |= uint64(dAtA[iNdEx-6]) << 16
+			v |= uint64(dAtA[iNdEx-5]) << 24
+			v |= uint64(dAtA[iNdEx-4]) << 32
+			v |= uint64(dAtA[iNdEx-3]) << 40
+			v |= uint64(dAtA[iNdEx-2]) << 48
+			v |= uint64(dAtA[iNdEx-1]) << 56
 			v2 := float64(math.Float64frombits(v))
 			m.CpuPercentage = &v2
 			hasFields[0] |= uint64(0x00000004)
@@ -806,7 +822,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -827,7 +843,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -848,7 +864,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -868,7 +884,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				if iNdEx >= l {
 					return io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				v |= (uint64(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -876,9 +892,28 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 				}
 			}
 			m.DiskBytesQuota = &v
+		case 8:
+			if wireType != 1 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CpuPercentageWeighted", wireType)
+			}
+			var v uint64
+			if (iNdEx + 8) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += 8
+			v = uint64(dAtA[iNdEx-8])
+			v |= uint64(dAtA[iNdEx-7]) << 8
+			v |= uint64(dAtA[iNdEx-6]) << 16
+			v |= uint64(dAtA[iNdEx-5]) << 24
+			v |= uint64(dAtA[iNdEx-4]) << 32
+			v |= uint64(dAtA[iNdEx-3]) << 40
+			v |= uint64(dAtA[iNdEx-2]) << 48
+			v |= uint64(dAtA[iNdEx-1]) << 56
+			v2 := float64(math.Float64frombits(v))
+			m.CpuPercentageWeighted = &v2
 		default:
 			iNdEx = preIndex
-			skippy, err := skipMetric(data[iNdEx:])
+			skippy, err := skipMetric(dAtA[iNdEx:])
 			if err != nil {
 				return err
 			}
@@ -888,7 +923,7 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 			if (iNdEx + skippy) > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.XXX_unrecognized = append(m.XXX_unrecognized, data[iNdEx:iNdEx+skippy]...)
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
 			iNdEx += skippy
 		}
 	}
@@ -913,8 +948,8 @@ func (m *ContainerMetric) Unmarshal(data []byte) error {
 	}
 	return nil
 }
-func skipMetric(data []byte) (n int, err error) {
-	l := len(data)
+func skipMetric(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
 		var wire uint64
@@ -925,7 +960,7 @@ func skipMetric(data []byte) (n int, err error) {
 			if iNdEx >= l {
 				return 0, io.ErrUnexpectedEOF
 			}
-			b := data[iNdEx]
+			b := dAtA[iNdEx]
 			iNdEx++
 			wire |= (uint64(b) & 0x7F) << shift
 			if b < 0x80 {
@@ -943,7 +978,7 @@ func skipMetric(data []byte) (n int, err error) {
 					return 0, io.ErrUnexpectedEOF
 				}
 				iNdEx++
-				if data[iNdEx-1] < 0x80 {
+				if dAtA[iNdEx-1] < 0x80 {
 					break
 				}
 			}
@@ -960,7 +995,7 @@ func skipMetric(data []byte) (n int, err error) {
 				if iNdEx >= l {
 					return 0, io.ErrUnexpectedEOF
 				}
-				b := data[iNdEx]
+				b := dAtA[iNdEx]
 				iNdEx++
 				length |= (int(b) & 0x7F) << shift
 				if b < 0x80 {
@@ -983,7 +1018,7 @@ func skipMetric(data []byte) (n int, err error) {
 					if iNdEx >= l {
 						return 0, io.ErrUnexpectedEOF
 					}
-					b := data[iNdEx]
+					b := dAtA[iNdEx]
 					iNdEx++
 					innerWire |= (uint64(b) & 0x7F) << shift
 					if b < 0x80 {
@@ -994,7 +1029,7 @@ func skipMetric(data []byte) (n int, err error) {
 				if innerWireType == 4 {
 					break
 				}
-				next, err := skipMetric(data[start:])
+				next, err := skipMetric(dAtA[start:])
 				if err != nil {
 					return 0, err
 				}
@@ -1021,28 +1056,29 @@ var (
 func init() { proto.RegisterFile("metric.proto", fileDescriptorMetric) }
 
 var fileDescriptorMetric = []byte{
-	// 357 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0xdf, 0xaa, 0x13, 0x31,
-	0x10, 0x87, 0xd9, 0xed, 0x1f, 0x69, 0xda, 0xaa, 0x04, 0x2f, 0x96, 0x22, 0x65, 0x2d, 0x22, 0x45,
-	0x70, 0xfb, 0x06, 0x5e, 0xb4, 0x28, 0x14, 0x51, 0x74, 0x2f, 0xbc, 0x4f, 0x93, 0xe9, 0x1a, 0xdc,
-	0xcd, 0x2c, 0xd9, 0x49, 0x71, 0x9f, 0xc4, 0x57, 0xf2, 0xd2, 0x47, 0x90, 0x3e, 0x89, 0x24, 0x29,
-	0xda, 0x9e, 0xc3, 0xb9, 0x9b, 0xdf, 0x37, 0x5f, 0x66, 0x27, 0x4b, 0xd8, 0xac, 0x01, 0xb2, 0x5a,
-	0x16, 0xad, 0x45, 0x42, 0x3e, 0x86, 0x13, 0x18, 0xea, 0x16, 0x6f, 0x2a, 0x4d, 0xdf, 0xdc, 0xa1,
-	0x90, 0xd8, 0x6c, 0x2a, 0xac, 0x70, 0x13, 0xda, 0x07, 0x77, 0x0c, 0x29, 0x84, 0x50, 0xc5, 0x63,
-	0x0b, 0xe6, 0x9c, 0x56, 0xb1, 0x5e, 0x7d, 0x60, 0xd3, 0xaf, 0xa2, 0x76, 0xf0, 0x31, 0xcc, 0xe5,
-	0x9c, 0x0d, 0x8d, 0x68, 0x20, 0x4b, 0xf2, 0x74, 0x3d, 0x29, 0x43, 0xcd, 0x9f, 0xb1, 0xd1, 0xc9,
-	0x2b, 0x59, 0x9a, 0xa7, 0xeb, 0xa4, 0x8c, 0xc1, 0x9b, 0xce, 0x68, 0xca, 0x06, 0xd1, 0xf4, 0xf5,
-	0xea, 0x13, 0x9b, 0xed, 0xd0, 0x19, 0x02, 0xfb, 0xce, 0x2f, 0xf6, 0xd0, 0x34, 0x05, 0x35, 0x89,
-	0x30, 0x6d, 0x58, 0xc6, 0xe0, 0x29, 0x21, 0x89, 0x3a, 0x1b, 0xe4, 0x89, 0xa7, 0x21, 0xac, 0x7e,
-	0xa6, 0xec, 0xc9, 0x0e, 0x0d, 0x09, 0x6d, 0xc0, 0x5e, 0x36, 0x7c, 0xc9, 0xe6, 0xa2, 0x6d, 0x6b,
-	0x2d, 0x05, 0x69, 0x34, 0x7b, 0x75, 0x19, 0x7e, 0x0b, 0xbd, 0xa5, 0x4d, 0x47, 0xc2, 0x48, 0xd8,
-	0x1b, 0x05, 0x3f, 0xc2, 0xd7, 0x46, 0xe5, 0x2d, 0xf4, 0x96, 0x6c, 0xdd, 0x67, 0xb0, 0x12, 0x0c,
-	0x89, 0x0a, 0xc2, 0x65, 0x92, 0xf2, 0x16, 0xf2, 0x9c, 0x4d, 0x1b, 0x68, 0xd0, 0xf6, 0xdb, 0x9e,
-	0xa0, 0xcb, 0x86, 0x61, 0xef, 0x6b, 0xc4, 0x9f, 0xb3, 0x89, 0xd2, 0xdd, 0xf7, 0xd8, 0x1f, 0x85,
-	0xfe, 0x7f, 0xc0, 0x5f, 0xb3, 0xa7, 0x57, 0xf2, 0x17, 0x87, 0x24, 0xb2, 0x71, 0xb8, 0xe6, 0x3d,
-	0xce, 0x5f, 0xb1, 0xc7, 0xff, 0x0e, 0x46, 0xf3, 0x51, 0x30, 0xef, 0xd0, 0xed, 0xdb, 0x5f, 0xe7,
-	0x65, 0xf2, 0xfb, 0xbc, 0x4c, 0xfe, 0x9c, 0x97, 0x09, 0x7b, 0x81, 0xb6, 0x2a, 0x64, 0x8d, 0x4e,
-	0x1d, 0xd1, 0x19, 0x65, 0xfb, 0x42, 0x59, 0x6c, 0x3b, 0x34, 0x0a, 0x8a, 0xf8, 0x44, 0xb6, 0xf3,
-	0xf8, 0xfb, 0xde, 0x0b, 0x49, 0x68, 0xfb, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xc6, 0xbe, 0x10,
-	0xbe, 0x48, 0x02, 0x00, 0x00,
+	// 377 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x92, 0x41, 0x8b, 0x13, 0x31,
+	0x14, 0xc7, 0xc9, 0x6c, 0xbb, 0xba, 0xd9, 0x5d, 0x95, 0xa0, 0x30, 0x2c, 0x52, 0xc6, 0x22, 0x52,
+	0x04, 0x67, 0x2f, 0x9e, 0x3d, 0x74, 0x51, 0x28, 0xa2, 0xe8, 0x1c, 0xf4, 0x9c, 0x26, 0xaf, 0xd3,
+	0xe0, 0x4c, 0xde, 0x90, 0x79, 0x29, 0xce, 0x37, 0xf4, 0x22, 0xf8, 0x11, 0xa4, 0x9f, 0x44, 0x92,
+	0x14, 0xed, 0xa8, 0x7b, 0x7b, 0xff, 0xdf, 0xfb, 0xe5, 0xcd, 0xcb, 0x10, 0x7e, 0xd1, 0x02, 0x39,
+	0xa3, 0xca, 0xce, 0x21, 0xa1, 0x38, 0x85, 0x1d, 0x58, 0xea, 0xaf, 0x5e, 0xd4, 0x86, 0xb6, 0x7e,
+	0x5d, 0x2a, 0x6c, 0xaf, 0x6b, 0xac, 0xf1, 0x3a, 0xb6, 0xd7, 0x7e, 0x13, 0x53, 0x0c, 0xb1, 0x4a,
+	0xc7, 0xae, 0xb8, 0xf7, 0x46, 0xa7, 0x7a, 0xfe, 0x96, 0x9f, 0x7f, 0x92, 0x8d, 0x87, 0x77, 0x71,
+	0xae, 0x10, 0x7c, 0x62, 0x65, 0x0b, 0x39, 0x2b, 0xb2, 0xc5, 0x59, 0x15, 0x6b, 0xf1, 0x90, 0x4f,
+	0x77, 0x41, 0xc9, 0xb3, 0x22, 0x5b, 0xb0, 0x2a, 0x85, 0x60, 0x7a, 0x6b, 0x28, 0x3f, 0x49, 0x66,
+	0xa8, 0xe7, 0xef, 0xf9, 0xc5, 0x0d, 0x7a, 0x4b, 0xe0, 0x5e, 0x87, 0xc5, 0x6e, 0x9b, 0xa6, 0xa1,
+	0x21, 0x19, 0xa7, 0x4d, 0xaa, 0x14, 0x02, 0x25, 0x24, 0xd9, 0xe4, 0x27, 0x05, 0x0b, 0x34, 0x86,
+	0xf9, 0xf7, 0x8c, 0xdf, 0xbf, 0x41, 0x4b, 0xd2, 0x58, 0x70, 0x87, 0x0d, 0x9f, 0xf2, 0x4b, 0xd9,
+	0x75, 0x8d, 0x51, 0x92, 0x0c, 0xda, 0x95, 0x3e, 0x0c, 0x1f, 0xc3, 0x60, 0x19, 0xdb, 0x93, 0xb4,
+	0x0a, 0x56, 0x56, 0xc3, 0xd7, 0xf8, 0xb5, 0x69, 0x35, 0x86, 0xc1, 0x52, 0x9d, 0xff, 0x00, 0x4e,
+	0x81, 0x25, 0x59, 0x43, 0xbc, 0x0c, 0xab, 0xc6, 0x50, 0x14, 0xfc, 0xbc, 0x85, 0x16, 0xdd, 0xb0,
+	0x1c, 0x08, 0xfa, 0x7c, 0x12, 0xf7, 0x3e, 0x46, 0xe2, 0x31, 0x3f, 0xd3, 0xa6, 0xff, 0x92, 0xfa,
+	0xd3, 0xd8, 0xff, 0x03, 0xc4, 0x73, 0xfe, 0xe0, 0x48, 0xfe, 0xe8, 0x91, 0x64, 0x7e, 0x1a, 0xaf,
+	0xf9, 0x0f, 0x17, 0xcf, 0xf8, 0xbd, 0xdf, 0x07, 0x93, 0x79, 0x27, 0x9a, 0x7f, 0x51, 0xf1, 0x92,
+	0x3f, 0x1a, 0x2d, 0xf9, 0x19, 0x4c, 0xbd, 0x25, 0xd0, 0xf9, 0xdd, 0x82, 0x2d, 0x58, 0xf5, 0xff,
+	0xe6, 0xf2, 0xd5, 0xb7, 0xfd, 0x8c, 0xfd, 0xd8, 0xcf, 0xd8, 0xcf, 0xfd, 0x8c, 0xf1, 0x27, 0xe8,
+	0xea, 0x52, 0x35, 0xe8, 0xf5, 0x06, 0xbd, 0xd5, 0x6e, 0x28, 0xb5, 0xc3, 0xae, 0x47, 0xab, 0xa1,
+	0x4c, 0x0f, 0x6b, 0x79, 0x99, 0x7e, 0xfa, 0x1b, 0xa9, 0x08, 0xdd, 0xf0, 0x2b, 0x00, 0x00, 0xff,
+	0xff, 0x32, 0x8c, 0x3c, 0xbd, 0x7e, 0x02, 0x00, 0x00,
 }
