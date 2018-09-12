@@ -1,4 +1,4 @@
 [submodule "definitions"]
 	path = definitions
-	url = https://github.com/cloudfoundry/dropsonde-protocol.git
-	branch = master
+	url = https://github.com/masters-of-cats/dropsonde-protocol.git
+	branch = wip-log-cpu-metric-159827961
