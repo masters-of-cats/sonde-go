@@ -21,6 +21,7 @@
 		ValueMetric
 		CounterEvent
 		ContainerMetric
+		CPUUsage
 		UUID
 */
 package events
