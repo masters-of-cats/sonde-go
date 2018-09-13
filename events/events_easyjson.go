@@ -998,6 +998,16 @@ func easyjson692db02bDecodeGithubComCloudfoundrySondeGoEvents5(in *jlexer.Lexer,
 				}
 				(*out.ContainerMetric).UnmarshalEasyJSON(in)
 			}
+		case "containerCPUUsage":
+			if in.IsNull() {
+				in.Skip()
+				out.ContainerCPUUsage = nil
+			} else {
+				if out.ContainerCPUUsage == nil {
+					out.ContainerCPUUsage = new(ContainerCPUUsage)
+				}
+				(*out.ContainerCPUUsage).UnmarshalEasyJSON(in)
+			}
 		default:
 			in.SkipRecursive()
 		}
@@ -1165,6 +1175,16 @@ func easyjson692db02bEncodeGithubComCloudfoundrySondeGoEvents5(out *jwriter.Writ
 			out.RawString(prefix)
 		}
 		(*in.ContainerMetric).MarshalEasyJSON(out)
+	}
+	if in.ContainerCPUUsage != nil {
+		const prefix string = ",\"containerCPUUsage\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		(*in.ContainerCPUUsage).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
 }
@@ -1468,7 +1488,7 @@ func (v ContainerMetric) MarshalEasyJSON(w *jwriter.Writer) {
 func (v *ContainerMetric) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson692db02bDecodeGithubComCloudfoundrySondeGoEvents7(l, v)
 }
-func easyjson692db02bDecodeGithubComCloudfoundrySondeGoEvents8(in *jlexer.Lexer, out *CPUUsage) {
+func easyjson692db02bDecodeGithubComCloudfoundrySondeGoEvents8(in *jlexer.Lexer, out *ContainerCPUUsage) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -1497,25 +1517,35 @@ func easyjson692db02bDecodeGithubComCloudfoundrySondeGoEvents8(in *jlexer.Lexer,
 				}
 				*out.ApplicationId = string(in.String())
 			}
-		case "absoluteCpuUsage":
+		case "instanceIndex":
 			if in.IsNull() {
 				in.Skip()
-				out.AbsoluteCpuUsage = nil
+				out.InstanceIndex = nil
 			} else {
-				if out.AbsoluteCpuUsage == nil {
-					out.AbsoluteCpuUsage = new(uint64)
+				if out.InstanceIndex == nil {
+					out.InstanceIndex = new(int32)
 				}
-				*out.AbsoluteCpuUsage = uint64(in.Uint64())
+				*out.InstanceIndex = int32(in.Int32())
 			}
-		case "absoluteCpuEntitlement":
+		case "absoluteUsage":
 			if in.IsNull() {
 				in.Skip()
-				out.AbsoluteCpuEntitlement = nil
+				out.AbsoluteUsage = nil
 			} else {
-				if out.AbsoluteCpuEntitlement == nil {
-					out.AbsoluteCpuEntitlement = new(uint64)
+				if out.AbsoluteUsage == nil {
+					out.AbsoluteUsage = new(uint64)
 				}
-				*out.AbsoluteCpuEntitlement = uint64(in.Uint64())
+				*out.AbsoluteUsage = uint64(in.Uint64())
+			}
+		case "absoluteEntitlement":
+			if in.IsNull() {
+				in.Skip()
+				out.AbsoluteEntitlement = nil
+			} else {
+				if out.AbsoluteEntitlement == nil {
+					out.AbsoluteEntitlement = new(uint64)
+				}
+				*out.AbsoluteEntitlement = uint64(in.Uint64())
 			}
 		case "containerAge":
 			if in.IsNull() {
@@ -1537,7 +1567,7 @@ func easyjson692db02bDecodeGithubComCloudfoundrySondeGoEvents8(in *jlexer.Lexer,
 		in.Consumed()
 	}
 }
-func easyjson692db02bEncodeGithubComCloudfoundrySondeGoEvents8(out *jwriter.Writer, in CPUUsage) {
+func easyjson692db02bEncodeGithubComCloudfoundrySondeGoEvents8(out *jwriter.Writer, in ContainerCPUUsage) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -1551,25 +1581,35 @@ func easyjson692db02bEncodeGithubComCloudfoundrySondeGoEvents8(out *jwriter.Writ
 		}
 		out.String(string(*in.ApplicationId))
 	}
-	if in.AbsoluteCpuUsage != nil {
-		const prefix string = ",\"absoluteCpuUsage\":"
+	if in.InstanceIndex != nil {
+		const prefix string = ",\"instanceIndex\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
 		} else {
 			out.RawString(prefix)
 		}
-		out.Uint64(uint64(*in.AbsoluteCpuUsage))
+		out.Int32(int32(*in.InstanceIndex))
 	}
-	if in.AbsoluteCpuEntitlement != nil {
-		const prefix string = ",\"absoluteCpuEntitlement\":"
+	if in.AbsoluteUsage != nil {
+		const prefix string = ",\"absoluteUsage\":"
 		if first {
 			first = false
 			out.RawString(prefix[1:])
 		} else {
 			out.RawString(prefix)
 		}
-		out.Uint64(uint64(*in.AbsoluteCpuEntitlement))
+		out.Uint64(uint64(*in.AbsoluteUsage))
+	}
+	if in.AbsoluteEntitlement != nil {
+		const prefix string = ",\"absoluteEntitlement\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
+		out.Uint64(uint64(*in.AbsoluteEntitlement))
 	}
 	if in.ContainerAge != nil {
 		const prefix string = ",\"containerAge\":"
@@ -1585,11 +1625,11 @@ func easyjson692db02bEncodeGithubComCloudfoundrySondeGoEvents8(out *jwriter.Writ
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v CPUUsage) MarshalEasyJSON(w *jwriter.Writer) {
+func (v ContainerCPUUsage) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson692db02bEncodeGithubComCloudfoundrySondeGoEvents8(w, v)
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *CPUUsage) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *ContainerCPUUsage) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson692db02bDecodeGithubComCloudfoundrySondeGoEvents8(l, v)
 }
